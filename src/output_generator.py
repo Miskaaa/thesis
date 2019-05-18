@@ -4,8 +4,8 @@ Will get otu profiles, combine them ang generate output file
 
 import settings
 
-def make_output(known_otus, unknown_otus):
-    expected_result = open(settings.RESULT_FILENAME, "w")
+def make_output(known_otus, unknown_otus, result_filename):
+    expected_result = open(result_filename, "w")
     expected_result.write("#KO ID\tstaggered\teven\n")
     index = 0
     for ko_name in known_otus:

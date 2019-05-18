@@ -26,19 +26,19 @@ def get_16s_counts():
 
 
 
-new_reference = "D:\\DP\\data\\test\\GG_ko_counts_new.tab"
+new_reference = "D:\\DP\\data\\test\\references\\GG_ko_counts_new.tab"
 
 #settings
 REF_FILE_NAME = "D:\\DP\\data\\GG_ko_counts.tab"
 KOS_FILE_NAME = "D:\\DP\\data\\distance_matrix_known.tab"
-NUMBER_OF_SAMPLES = 2  # kolko sa ma vygenerovat a testovat vzoriek
+NUMBER_OF_SAMPLES = 10  # kolko sa ma vygenerovat a testovat vzoriek
 MAX_ABUNDANCE = 15  # obmedzuje maximalnu nahodne genrovanu abundanciu bakterie
-REFERENCE_SIZE_TO_TEST = [90,80]  # ake percento zachovania referencnej tabulky sa ma testovat
-NUMBER_OF_TESTS = 2  # kolkokrat sa ma kazde nastavenie otestovat
-CORRELATION_FILE = "D:\\DP\\data\\correlations_presence_01.tab"
-GENERATE = False  # ci sa maju aj generovat nove testove subory
+REFERENCE_SIZE_TO_TEST = [90,80,70,60,50,40]#ke percento zachovania referencnej tabulky sa ma testovat
+NUMBER_OF_TESTS = 10  # kolkokrat sa ma kazde nastavenie otestovat
+CORRELATION_FILE = "D:\\DP\\data\\correlations_picrust1.tab"
+GENERATE = False # ci sa maju aj generovat nove testove subory
 COMPUTE = True  # ci sa maju aj pocitat nove veci (nie ked menime len vysledok korelacie)
-ko_tresholds = ["100","90","80"]
+ko_tresholds = ["100","90","80","10","1"]
 
 
 
@@ -128,8 +128,13 @@ for new_size in REFERENCE_SIZE_TO_TEST:
     for i in range(NUMBER_OF_TESTS):
         print("_____ Test " + str(i+1) + " of " + str(NUMBER_OF_TESTS) + ":")
         print("Generating new reference table")
-        if COMPUTE:
-            generate_new_reference_table(100 - new_size, REF_FILE_NAME, new_reference)
+
+        #new_name = new_reference.replace(".", "_" + str(new_size) + "_" + str(i) + ".").replace("\\\\","\\")
+        new_name = "D:\DP\data\\\\test\\\\references\GG_ko_counts_new_"+str(new_size) + "_" + str(i)+".tab"
+
+        #if COMPUTE:
+        #    generate_new_reference_table(100 - new_size, REF_FILE_NAME, new_name)
+
         for j in range(NUMBER_OF_SAMPLES):
 
             print("Testing sample " + str(j))
@@ -141,8 +146,10 @@ for new_size in REFERENCE_SIZE_TO_TEST:
             if COMPUTE:
                 settings_file = open("../settings.py", "r")
                 lines = settings_file.readlines()
+                lines[7] = "KO_PROFILE_FILENAME = \"" + new_name + "\"\n"
                 lines[13] = "INPUT_FILENAME = \"" + sample_filename + "\"\n"
                 lines[35] = "RESULT_FILENAME = \"" + result_filename + "\"\n"
+                lines[65] = "PICRUST_FILENAME = \"D:\DP\data\predicted\predicted_" + str(new_size) + "_" + str(i) + "\"\n"
                 settings_file.close()
 
                 settings_file = open("../settings.py", "w")
